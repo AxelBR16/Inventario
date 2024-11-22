@@ -73,7 +73,6 @@ public class ProductoServiceImpl implements ProductoService {
         productoExistente.setPrecioVenta(producto.getPrecioVenta());
         productoExistente.setStock(producto.getStock());
 
-        // Validar si el proveedor asociado existe
         if (producto.getProveedor() == null || producto.getProveedor().getId_proveedor() == 0) {
             throw new IllegalArgumentException("El ID del proveedor no puede ser nulo o 0.");
         }
@@ -83,7 +82,6 @@ public class ProductoServiceImpl implements ProductoService {
             throw new IllegalArgumentException("Proveedor no encontrado con el ID: " + producto.getProveedor().getId_proveedor());
         }
 
-        // Asociar solo el proveedor por ID
         productoExistente.setProveedor(proveedor);
 
         return productoRepository.save(productoExistente);
