@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ver1/productos/")
+@RequestMapping("/api/productos/")
 @CrossOrigin(origins = {"*"})
 public class ProductoController {
 
@@ -27,13 +27,11 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtenerPorId(@PathVariable int id) {
-        Producto producto = service.obtenerPorId(id);
-        if (producto != null) {
-            return ResponseEntity.ok(producto);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        return service.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
+
 
     @PostMapping
     public ResponseEntity<Producto> createProducto(@Valid @RequestBody ProductoDTO productoDTO) {
