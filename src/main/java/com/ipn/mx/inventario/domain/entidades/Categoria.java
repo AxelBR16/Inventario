@@ -1,23 +1,19 @@
 package com.ipn.mx.inventario.domain.entidades;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.List;
-
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "categorias")
+@Table(name = "Categorias")
 
-public class Categorias implements Serializable {
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_categoria")
@@ -28,8 +24,4 @@ public class Categorias implements Serializable {
 
     @Column(name = "descripcion")
     private String descripcion;
-
-    @OneToMany(mappedBy = "categorias", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Producto> productos;
 }

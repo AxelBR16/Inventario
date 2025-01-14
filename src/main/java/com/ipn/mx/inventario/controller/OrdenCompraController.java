@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/ordenes-compra")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"*"})
 public class OrdenCompraController {
 
     private final OrdenCompraService ordenCompraService;

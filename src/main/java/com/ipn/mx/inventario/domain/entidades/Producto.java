@@ -1,6 +1,7 @@
 package com.ipn.mx.inventario.domain.entidades;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -18,7 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Producto")
+@Table(name = "Productos")
+
 public class Producto {
 
     @Id
@@ -35,9 +37,12 @@ public class Producto {
     private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria", nullable = false)
-    @JsonBackReference
-    private Categorias categorias;
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "id_proveedor")
+    private Proveedor proveedor;
 
     @NotNull(message = "El precio de compra no puede ser nulo")
     @DecimalMin(value = "0.0", inclusive = true, message = "El precio de compra debe ser mayor o igual a 0")
@@ -53,16 +58,5 @@ public class Producto {
     @Column(name = "stock", nullable = false)
     private int stock;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_proveedor")
-    private Proveedor proveedor;
-
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Movimiento> movimiento;
-
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<OrdenCompra> ordenCompra;
 
 }

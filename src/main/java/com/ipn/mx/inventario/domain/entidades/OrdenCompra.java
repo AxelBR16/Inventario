@@ -14,20 +14,19 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "Ordenes_Compra")
 
-public class OrdenCompra implements Serializable {
+public class OrdenCompra{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCompra;
 
     @ManyToOne
-    @JoinColumn(name = "id_proveedor", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "id_proveedor")
     private Proveedor proveedor;
 
     @ManyToOne
-    @JoinColumn(name = "id_producto", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "id_producto")
     private Producto producto;
+
 
     private int cantidad;
     private double precioUnitario;

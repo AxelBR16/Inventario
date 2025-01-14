@@ -1,6 +1,7 @@
 package com.ipn.mx.inventario.controller;
 
 import com.ipn.mx.inventario.domain.entidades.Producto;
+import com.ipn.mx.inventario.domain.entidades.TipoMovimiento;
 import com.ipn.mx.inventario.dto.ProductoDTO;
 import com.ipn.mx.inventario.services.ProductoService;
 import jakarta.validation.Valid;
@@ -17,45 +18,54 @@ import java.util.List;
 public class ProductoController {
 
     @Autowired
-    private ProductoService service;
-
-
+    private ProductoService productoService;
     @GetMapping
-    public List<Producto> obtenerTodos() {
-        return service.obtenerTodos();
+    public ResponseEntity<Iterable<Producto>> getAllProductos() {
+        return ResponseEntity.ok(productoService.getAllProductos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerPorId(@PathVariable int id) {
-        return service.obtenerPorId(id)
+    public ResponseEntity<Producto> getProducto(@PathVariable Integer id) {
+        return productoService.getProducto(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
     @PostMapping
-    public ResponseEntity<Producto> createProducto(@Valid @RequestBody ProductoDTO productoDTO) {
-        Producto producto = service.createProducto(productoDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(producto);
+    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO productoDTO) {
+        Producto nuevoProducto = productoService.crearProducto(productoDTO);
+        return ResponseEntity.ok(nuevoProducto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable int id, @RequestBody Producto producto) {
+    public ResponseEntity<Producto> updateProducto(
+            @PathVariable Integer id,
+            @RequestBody @Valid ProductoDTO productoDTO) {
         try {
-            Producto productoActualizado = service.actualizarProducto(id, producto);
+            Producto productoActualizado = productoService.updateProducto(id, productoDTO);
             return ResponseEntity.ok(productoActualizado);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.notFound().build();
         }
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProducto(@PathVariable int id) {
+    public ResponseEntity<Void> deleteProducto(@PathVariable Integer id) {
+        productoService.deleteProducto(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/movimiento")
+    public ResponseEntity<Void> registrarMovimiento(
+            @PathVariable("id") Integer productoId,
+            @RequestParam Integer cantidad,
+            @RequestParam TipoMovimiento tipo) {
         try {
-            service.eliminarProducto(id);
-            return ResponseEntity.noContent().build();
+            productoService.actualizarStock(productoId, cantidad, tipo);
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.badRequest().build();
         }
     }
 }

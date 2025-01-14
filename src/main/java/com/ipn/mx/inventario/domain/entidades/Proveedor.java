@@ -16,9 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Proveedor")
+@Table(name = "Proveedores")
 
-public class Proveedor implements Serializable {
+public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_proveedor")
@@ -38,18 +38,7 @@ public class Proveedor implements Serializable {
     @Column(name = "email", length = 100, nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Producto> productos;
-
-    public void setIdProveedor(int id_proveedor) {
-        this.id_proveedor = id_proveedor;
-    }
-
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
-        for (Producto producto : productos) {
-            producto.setProveedor(this);
-        }
-    }
 }

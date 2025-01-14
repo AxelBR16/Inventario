@@ -21,9 +21,9 @@ public class Movimiento {
     @Column(name = "id_movimiento")
     private int idMovimiento;
 
+
     @ManyToOne
-    @JoinColumn(name = "id_producto", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "id_producto")
     private Producto producto;
 
     @Enumerated(EnumType.STRING)

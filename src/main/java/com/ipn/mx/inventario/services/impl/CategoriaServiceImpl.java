@@ -1,7 +1,8 @@
 package com.ipn.mx.inventario.services.impl;
 
-import com.ipn.mx.inventario.domain.entidades.Categorias;
+import com.ipn.mx.inventario.domain.entidades.Categoria;
 import com.ipn.mx.inventario.domain.entidades.Producto;
+import com.ipn.mx.inventario.domain.entidades.Proveedor;
 import com.ipn.mx.inventario.domain.repositorios.CategoriaRepository;
 import com.ipn.mx.inventario.domain.repositorios.ProductoRepository;
 import com.ipn.mx.inventario.services.CategoriaService;
@@ -24,7 +25,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     @Transactional
-    public Categorias crearCategoria(Categorias categoria) {
+    public Categoria crearCategoria(Categoria categoria) {
         return categoriaRepository.save(categoria);
     }
 
@@ -39,10 +40,9 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Producto> listarProductosPorCategoria(int idCategoria) {
-        if (!categoriaRepository.existsById(idCategoria)) {
-            throw new EntityNotFoundException("Categoría no encontrada con ID: " + idCategoria);
-        }
-        return productoRepository.findByCategorias_IdCategoria(idCategoria);
+    public List<Categoria> listarCategorias() {
+        return (List<Categoria>) categoriaRepository.findAll();
     }
+
+
 }

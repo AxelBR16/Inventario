@@ -1,105 +1,121 @@
 package com.ipn.mx.inventario.services.impl;
 
-import com.ipn.mx.inventario.domain.entidades.Producto;
-import com.ipn.mx.inventario.domain.entidades.Proveedor;
-import com.ipn.mx.inventario.domain.entidades.Categorias;
+import com.ipn.mx.inventario.domain.entidades.*;
 import com.ipn.mx.inventario.domain.repositorios.CategoriaRepository;
+import com.ipn.mx.inventario.domain.repositorios.MovimientoRepository;
 import com.ipn.mx.inventario.domain.repositorios.ProductoRepository;
 import com.ipn.mx.inventario.domain.repositorios.ProveedorRepository;
 import com.ipn.mx.inventario.dto.ProductoDTO;
 import com.ipn.mx.inventario.services.ProductoService;
-import com.ipn.mx.inventario.services.ProveedorService;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.validator.internal.constraintvalidators.bv.time.futureorpresent.AbstractFutureOrPresentInstantBasedValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
-
 @Service
-public class ProductoServiceImpl implements ProductoService {
+@Transactional
 
+public class ProductoServiceImpl implements ProductoService {
+    @Autowired
+    private CategoriaRepository categoriaRepository;
     @Autowired
     private ProductoRepository productoRepository;
-
-    @Autowired
-    private ProveedorService proveedorService;
-
     @Autowired
     private ProveedorRepository proveedorRepository;
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Producto> obtenerTodos() {
-        return (List<Producto>) productoRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Producto> obtenerPorId(int id) {
-        return productoRepository.findById(id);
-    }
+    private MovimientoRepository movimientoRepository;
 
     @Override
     @Transactional
-    public Producto createProducto(ProductoDTO dto) {
-        Proveedor proveedor = proveedorRepository.findById(dto.getId_proveedor())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Proveedor no encontrado con ID: " + dto.getId_proveedor()));
+    public Producto crearProducto(ProductoDTO productoDTO) {
+        Categoria categoria = categoriaRepository.findById(productoDTO.getIdCategoria())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
 
-        Categorias categoria = categoriaRepository.findById(dto.getIdCategoria())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Categoria no encontrado con ID: " + dto.getIdCategoria()));
+        Proveedor proveedor = proveedorRepository.findById(productoDTO.getId_proveedor())
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
 
         Producto producto = Producto.builder()
-                .nombre(dto.getNombre())
-                .descripcion(dto.getDescripcion())
-                .categorias(categoria)
-                .precioCompra(dto.getPrecioCompra())
-                .precioVenta(dto.getPrecioVenta())
-                .stock(dto.getStock())
+                .nombre(productoDTO.getNombre())
+                .descripcion(productoDTO.getDescripcion())
+                .categoria(categoria)
                 .proveedor(proveedor)
+                .precioCompra(productoDTO.getPrecioCompra())
+                .precioVenta(productoDTO.getPrecioVenta())
+                .stock(productoDTO.getStock())
                 .build();
 
         return productoRepository.save(producto);
     }
-
     @Override
     @Transactional
-    public Producto actualizarProducto(int id, Producto producto) {
-        // Busca el producto existente usando Optional
+    public Optional<Producto> getProducto(Integer id) {
+        return productoRepository.findById(id);
+    }
+    @Override
+    @Transactional
+    public Iterable<Producto> getAllProductos() {
+        return productoRepository.findAll();
+    }
+    @Override
+    @Transactional
+    public void deleteProducto(Integer id) {
+        productoRepository.deleteById(id);
+    }
+    @Override
+    @Transactional
+    public Producto updateProducto(Integer id, ProductoDTO productoDTO) {
         Producto productoExistente = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con el ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        productoExistente.setNombre(producto.getNombre());
-        productoExistente.setDescripcion(producto.getDescripcion());
-        productoExistente.setPrecioCompra(producto.getPrecioCompra());
-        productoExistente.setPrecioVenta(producto.getPrecioVenta());
-        productoExistente.setStock(producto.getStock());
 
-        if (producto.getProveedor() == null || producto.getProveedor().getId_proveedor() == 0) {
-            throw new IllegalArgumentException("El ID del proveedor no puede ser nulo o 0.");
-        }
+            Categoria categoria = categoriaRepository.findById(productoDTO.getIdCategoria())
+                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            productoExistente.setCategoria(categoria);
 
-        Proveedor proveedor = proveedorService.obtenerPorId(producto.getProveedor().getId_proveedor());
-        if (proveedor == null) {
-            throw new IllegalArgumentException("Proveedor no encontrado con el ID: " + producto.getProveedor().getId_proveedor());
-        }
 
-        productoExistente.setProveedor(proveedor);
 
+            Proveedor proveedor = proveedorRepository.findById(productoDTO.getId_proveedor())
+                    .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+            productoExistente.setProveedor(proveedor);
+        productoExistente.setNombre(productoDTO.getNombre());
+        productoExistente.setDescripcion(productoDTO.getDescripcion());
+        productoExistente.setPrecioCompra(productoDTO.getPrecioCompra());
+        productoExistente.setPrecioVenta(productoDTO.getPrecioVenta());
+        productoExistente.setStock(productoDTO.getStock());
+
+        // Guardar y retornar el producto actualizado
         return productoRepository.save(productoExistente);
     }
 
     @Override
     @Transactional
-    public void eliminarProducto(int id) {
-        Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con el ID: " + id));
+    public void actualizarStock(Integer productoId, Integer cantidad, TipoMovimiento tipo) {
+        Optional<Producto> productoOpt = productoRepository.findById(productoId);
+        if (productoOpt.isPresent()) {
+            Producto producto = productoOpt.get();
 
-        productoRepository.delete(producto);
+            if (tipo == TipoMovimiento.DEVOLUCION) {
+                producto.setStock(producto.getStock() + cantidad);
+            } else {
+                if (producto.getStock() < cantidad) {
+                    throw new RuntimeException("Stock insuficiente");
+                }
+                producto.setStock(producto.getStock() - cantidad);
+            }
+
+            productoRepository.save(producto);
+            Movimiento movimiento = new Movimiento();
+            movimiento.setProducto(producto);
+            movimiento.setCantidad(cantidad);
+            movimiento.setTipoMovimiento(tipo);
+            movimiento.setFecha(LocalDateTime.now());
+            movimientoRepository.save(movimiento);
+        } else {
+            throw new RuntimeException("Producto no encontrado");
+        }
     }
 }

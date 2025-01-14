@@ -1,13 +1,13 @@
 package com.ipn.mx.inventario.services;
 
 import com.ipn.mx.inventario.domain.entidades.Producto;
-import com.ipn.mx.inventario.domain.entidades.Categorias;
+import com.ipn.mx.inventario.domain.entidades.Categoria;
 
 
 import java.util.List;
 
 public interface CategoriaService {
-    Categorias crearCategoria(Categorias categoria);
+    Categoria crearCategoria(Categoria categoria);
     void eliminarCategoria(int id);
-    List<Producto> listarProductosPorCategoria(int idCategoria);
+    List<Categoria> listarCategorias();
 }

@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequestMapping("/api/movimientos")
 public class MovimientoController {
 
-
+/*
     @Autowired
     private MovimientoService movimientoService;
 
@@ -59,5 +59,5 @@ public class MovimientoController {
         List<Movimiento> movimientos = movimientoService.getAllMovimientos();
         return ResponseEntity.ok(movimientos);
     }
-
+*/
 }
