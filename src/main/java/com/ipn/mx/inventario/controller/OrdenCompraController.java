@@ -26,31 +26,6 @@ import java.util.stream.Collectors;
 public class OrdenCompraController {
 
     private final OrdenCompraService ordenCompraService;
-    private final ProductoRepository productoRepository;
-    private final ProveedorRepository proveedorRepository;
-
-    @PostMapping
-    public ResponseEntity<OrdenCompra> crearOrdenCompra(@Valid @RequestBody OrdenCompraDTO ordenCompraDTO) {
-
-        // Busca el producto por ID
-        Producto producto = productoRepository.findById(ordenCompraDTO.getIdProducto())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        // Busca el proveedor por ID
-        Proveedor proveedor = proveedorRepository.findById(ordenCompraDTO.getIdProveedor())
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
-
-        OrdenCompra nuevaOrdenCompra = new OrdenCompra();
-
-        nuevaOrdenCompra.setProducto(producto);
-        nuevaOrdenCompra.setProveedor(proveedor);
-        nuevaOrdenCompra.setCantidad(ordenCompraDTO.getCantidad());
-        nuevaOrdenCompra.setPrecioUnitario(ordenCompraDTO.getPrecioUnitario());
-        nuevaOrdenCompra.setFechaEntrega(ordenCompraDTO.getFechaEntrega());
-
-        OrdenCompra ordenCompraGuardada = ordenCompraService.saveMovimiento(nuevaOrdenCompra);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ordenCompraGuardada);
-    }
 
     @GetMapping
     public List<OrdenCompra> obtenerTodas() {

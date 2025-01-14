@@ -9,6 +9,6 @@ public class OrdenCompraDTO {
     private int idProveedor;
     private int idProducto;
     private int cantidad;
-    private double precioUnitario;
+    private double total;
     private LocalDate fechaEntrega;
 }

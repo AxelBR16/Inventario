@@ -27,7 +27,6 @@ public class OrdenCompra{
     @JoinColumn(name = "id_producto")
     private Producto producto;
 
-
     private int cantidad;
     private double precioUnitario;
     private double total;

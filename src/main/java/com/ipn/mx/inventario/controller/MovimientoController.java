@@ -18,40 +18,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/movimientos")
+@CrossOrigin(origins = {"*"})
 public class MovimientoController {
 
-/*
+
     @Autowired
     private MovimientoService movimientoService;
-
-    @Autowired
-    private ProductoService productoService;
-
-
-    @PostMapping
-    public ResponseEntity<Movimiento> createMovimiento(@RequestBody MovimientoDTO movimientoDTO) {
-        TipoMovimiento tipoMovimiento;
-        try {
-            tipoMovimiento = TipoMovimiento.valueOf(movimientoDTO.getTipoMovimiento().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Tipo de movimiento inválido: " + movimientoDTO.getTipoMovimiento());
-        }
-
-        Producto producto = productoService.obtenerPorId(movimientoDTO.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
-
-        Movimiento movimiento = Movimiento.builder()
-                .producto(producto)
-                .tipoMovimiento(tipoMovimiento)
-                .cantidad(movimientoDTO.getCantidad())
-                .fecha(LocalDateTime.now()) // Asignar la fecha actual del sistema
-                .build();
-
-        Movimiento savedMovimiento = movimientoService.saveMovimiento(movimiento);
-
-        return ResponseEntity.ok(savedMovimiento);
-    }
-
 
 
     @GetMapping
@@ -59,5 +31,5 @@ public class MovimientoController {
         List<Movimiento> movimientos = movimientoService.getAllMovimientos();
         return ResponseEntity.ok(movimientos);
     }
-*/
+
 }

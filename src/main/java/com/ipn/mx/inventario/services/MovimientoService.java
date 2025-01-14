@@ -5,7 +5,5 @@ import java.util.List;
 
 
 public interface MovimientoService {
-    Movimiento saveMovimiento(Movimiento movimiento);
     List<Movimiento> getAllMovimientos();
-
 }

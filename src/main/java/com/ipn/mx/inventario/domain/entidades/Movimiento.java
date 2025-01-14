@@ -1,6 +1,7 @@
 package com.ipn.mx.inventario.domain.entidades;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ public class Movimiento {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_producto")
+    @JoinColumn(name = "idProducto")
     private Producto producto;
 
     @Enumerated(EnumType.STRING)

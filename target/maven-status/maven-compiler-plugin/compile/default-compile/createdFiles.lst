@@ -7,16 +7,17 @@ com\ipn\mx\inventario\domain\entidades\OrdenCompra.class
 com\ipn\mx\inventario\dto\OrdenCompraDTO.class
 com\ipn\mx\inventario\controller\CategoriasController.class
 com\ipn\mx\inventario\controller\OrdenCompraController.class
+com\ipn\mx\inventario\domain\entidades\Categoria$CategoriaBuilder.class
 com\ipn\mx\inventario\services\impl\ProveedorServiceImpl.class
 com\ipn\mx\inventario\services\CategoriaService.class
 com\ipn\mx\inventario\domain\entidades\Producto$ProductoBuilder.class
 com\ipn\mx\inventario\domain\repositorios\ProductoRepository.class
+com\ipn\mx\inventario\domain\entidades\Categoria.class
 com\ipn\mx\inventario\domain\entidades\Producto.class
 com\ipn\mx\inventario\services\impl\OrdenCompraServiceImpl.class
 com\ipn\mx\inventario\dto\ProductoDTO$ProductoDTOBuilder.class
 com\ipn\mx\inventario\domain\entidades\Movimiento.class
 com\ipn\mx\inventario\services\MovimientoService.class
-com\ipn\mx\inventario\domain\entidades\Categorias.class
 com\ipn\mx\inventario\domain\entidades\TipoMovimiento.class
 com\ipn\mx\inventario\dto\ProductoDTO.class
 com\ipn\mx\inventario\services\impl\CategoriaServiceImpl.class
@@ -28,7 +29,6 @@ com\ipn\mx\inventario\services\impl\MovimientoServiceImpl.class
 com\ipn\mx\inventario\domain\entidades\Proveedor.class
 com\ipn\mx\inventario\services\ProveedorService.class
 com\ipn\mx\inventario\services\impl\ProductoServiceImpl.class
-com\ipn\mx\inventario\domain\entidades\Categorias$CategoriasBuilder.class
 com\ipn\mx\inventario\domain\entidades\Proveedor$ProveedorBuilder.class
 com\ipn\mx\inventario\InventarioApplication.class
 com\ipn\mx\inventario\domain\repositorios\CategoriaRepository.class

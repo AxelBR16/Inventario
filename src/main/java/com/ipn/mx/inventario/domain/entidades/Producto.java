@@ -57,6 +57,8 @@ public class Producto {
     @NotNull(message = "El stock no puede ser nulo")
     @Column(name = "stock", nullable = false)
     private int stock;
-
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Movimiento> movimientos;
 
 }

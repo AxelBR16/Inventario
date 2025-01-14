@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 @Service
 @Transactional
@@ -90,32 +91,31 @@ public class ProductoServiceImpl implements ProductoService {
         // Guardar y retornar el producto actualizado
         return productoRepository.save(productoExistente);
     }
-
     @Override
     @Transactional
     public void actualizarStock(Integer productoId, Integer cantidad, TipoMovimiento tipo) {
-        Optional<Producto> productoOpt = productoRepository.findById(productoId);
-        if (productoOpt.isPresent()) {
-            Producto producto = productoOpt.get();
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new NoSuchElementException("Producto con ID " + productoId + " no encontrado"));
 
-            if (tipo == TipoMovimiento.DEVOLUCION) {
-                producto.setStock(producto.getStock() + cantidad);
-            } else {
-                if (producto.getStock() < cantidad) {
-                    throw new RuntimeException("Stock insuficiente");
-                }
-                producto.setStock(producto.getStock() - cantidad);
-            }
-
-            productoRepository.save(producto);
-            Movimiento movimiento = new Movimiento();
-            movimiento.setProducto(producto);
-            movimiento.setCantidad(cantidad);
-            movimiento.setTipoMovimiento(tipo);
-            movimiento.setFecha(LocalDateTime.now());
-            movimientoRepository.save(movimiento);
+        if (tipo == TipoMovimiento.DEVOLUCION) {
+            producto.setStock(producto.getStock() + cantidad);
         } else {
-            throw new RuntimeException("Producto no encontrado");
+            if (producto.getStock() < cantidad) {
+                throw new RuntimeException("Stock insuficiente para el producto con ID " + productoId);
+            }
+            producto.setStock(producto.getStock() - cantidad);
         }
+
+        productoRepository.save(producto);
+
+        Movimiento movimiento = new Movimiento();
+        movimiento.setProducto(producto);
+        movimiento.setCantidad(cantidad);
+        movimiento.setTipoMovimiento(tipo);
+        movimiento.setFecha(LocalDateTime.now());
+
+        movimientoRepository.save(movimiento);
     }
+
+
 }
