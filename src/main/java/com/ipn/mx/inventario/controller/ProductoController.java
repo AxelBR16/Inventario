@@ -81,7 +81,7 @@ public class ProductoController {
     public ResponseEntity<Void> comprarProducto(
             @PathVariable("id") Integer productoId,
             @RequestParam Integer cantidad,
-            @RequestParam Integer idProveedor, // Asumimos que el proveedor también se proporciona
+            @RequestParam Integer idProveedor,
             @RequestParam Double total) {
 
         try {
